@@ -23,10 +23,6 @@ jobs:
       with:
         node-version: 16
 
-    - name: Set up `Tag`
-      id: ghtag
-      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-
     - name: Instal deps
       run: yarn
 
@@ -34,13 +30,9 @@ jobs:
       run: yarn build
 
     - name: Zip it
-      env:
-        TAG: ${{ steps.ghtag.outputs.tag }}
-      run: zip -9 -r smui-$TAG.zip dist
+      run: zip -9 -r smui.zip dist
 
     - name: Release
-      env:
-        TAG: ${{ steps.ghtag.outputs.tag }}
       uses: softprops/action-gh-release@v1
       with:
-        files: smui-$TAG.zip
+        files: smui.zip

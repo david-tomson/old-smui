@@ -1,0 +1,46 @@
+name: Node.js CI
+
+on:
+  push:
+    tags:
+      - '*'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+
+    - name: Setup `Node.js`
+      uses: actions/setup-node@v2.5.0
+      with:
+        node-version: 16
+
+    - name: Set up `Tag`
+      id: ghtag
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+    - name: Instal deps
+      run: yarn
+
+    - name: Build `SMUI`
+      run: yarn build
+
+    - name: Zip it
+      env:
+        TAG: ${{ steps.ghtag.outputs.tag }}
+      run: zip -9 -r smui-$TAG.zip dist
+
+    - name: Release
+      env:
+        TAG: ${{ steps.ghtag.outputs.tag }}
+      uses: softprops/action-gh-release@v1
+      with:
+        files: smui-$TAG.zip

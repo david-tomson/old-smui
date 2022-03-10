@@ -32,55 +32,55 @@ import VueWait from "vue-wait";
 Vue.use(VueWait);
 
 export const waiter = new VueWait({
-  registerComponent: false,
-  registerDirective: false,
+	registerComponent: false,
+	registerDirective: false,
 });
 
 // Auto register all components
 const requireComponent = require.context("./components", true, /\.(vue)$/);
 requireComponent.keys().forEach((fileName) => {
-  const componentConfig = requireComponent(fileName);
-  Vue.component(componentConfig.default.name, componentConfig.default);
+	const componentConfig = requireComponent(fileName);
+	Vue.component(componentConfig.default.name, componentConfig.default);
 });
 
 import Notifications from "vue-notification";
 Vue.use(Notifications, { duration: 2500 });
 
 Vue.prototype.$notifyError = (text: any) =>
-  Vue.prototype.$notify({ type: "error", text });
+	Vue.prototype.$notify({ type: "error", text });
 Vue.prototype.$notifyWarn = (text: any) =>
-  Vue.prototype.$notify({ type: "warn", text });
+	Vue.prototype.$notify({ type: "warn", text });
 Vue.prototype.$notifySuccess = (text: any) =>
-  Vue.prototype.$notify({ type: "success", text });
+	Vue.prototype.$notify({ type: "success", text });
 
 Vue.prototype.$request = async (
-  callback: any,
-  waitKey: any,
-  errorCallback: any = null
+	callback: any,
+	waitKey: any,
+	errorCallback: any = null
 ) => {
-  try {
-    waiter.start(waitKey);
-    await callback();
-  } catch (error: any) {
-    console.log(error);
+	try {
+		waiter.start(waitKey);
+		await callback();
+	} catch (error: any) {
+		console.log(error);
 
-    if (error.response) {
-      if (error.response.status === 401 && !router.app.$route.meta?.auth) {
-        store.dispatch("Logout");
-        return router.push({ name: "Login" });
-      }
+		if (error.response) {
+			if (error.response.status === 401 && !router.app.$route.meta?.auth) {
+				store.dispatch("Logout");
+				return router.push({ name: "Login" });
+			}
 
-      if (errorCallback) {
-        errorCallback(error);
-      } else if (error.response.status >= 500) {
-        Vue.prototype.$notifyError(i18n.t("API500ErrorMessage"));
-      } else if (error.response.data.Message && error.response.status != 401) {
-        Vue.prototype.$notifyError(error.response.data.Message);
-      }
-    } else {
-      Vue.prototype.$notifyError("Network Error !");
-    }
-  } finally {
-    waiter.end(waitKey);
-  }
+			if (errorCallback) {
+				errorCallback(error);
+			} else if (error.response.status >= 500) {
+				Vue.prototype.$notifyError(i18n.t("API500ErrorMessage"));
+			} else if (error.response.data.Message && error.response.status != 401) {
+				Vue.prototype.$notifyError(error.response.data.Message);
+			}
+		} else {
+			Vue.prototype.$notifyError("Network Error !");
+		}
+	} finally {
+		waiter.end(waitKey);
+	}
 };

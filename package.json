@@ -1,12 +1,12 @@
 {
-  "name": "secman-desktop",
-  "version": "1.1.0",
+  "name": "smui",
+  "version": "1.0.0",
   "author": {
     "name": "Secman, Inc.",
     "email": "contact@secman.dev",
     "url": "https://secman.dev"
   },
-  "description": "🖥️ Secman Desktop is the desktop client for secman.",
+  "description": "🗺️ Secman UI is your graphical secman.",
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -38,6 +38,7 @@
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.0",
+    "@types/node": "17.0.21",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-pwa": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",

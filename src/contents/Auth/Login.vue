@@ -1,15 +1,6 @@
 <template>
 	<div class="login-container">
-		<form v-if="shown" class="login-form">
-			<div class="pwa">
-				<VButton size="medium" class="mb-2" @click="installPWA">
-					<VIcon class="trsn ml-2" name="install" size="17px" />
-					Install Secman Desktop
-				</VButton>
-			</div>
-		</form>
-		<!-- Login Form -->
-		<form v-else class="login-form" @submit.stop.prevent="onLogin">
+		<form class="login-form" @submit.stop.prevent="onLogin">
 			<!-- E-Mail Address -->
 			<div class="mt-4">
 				<label v-text="$t('EMailAddress')" />
@@ -61,8 +52,6 @@ import { mapActions } from "vuex";
 export default {
 	data() {
 		return {
-			installEvent: undefined,
-			shown: false,
 			windowRef: null,
 			LoginForm: {
 				email: "",
@@ -90,25 +79,6 @@ export default {
 	beforeDestroy() {
 		if (this.windowRef) {
 			this.closePortal();
-		}
-	},
-
-	beforeMount() {
-		window.addEventListener("beforeinstallprompt", (e) => {
-			e.preventDefault();
-			this.installEvent = e;
-			this.shown = true;
-		});
-
-		// check if secman desktop is pwa or in the browser
-		// if secman desktop is in the browser, then show the install button
-		if (
-			window.matchMedia("(display-mode: standalone)").matches ||
-			window.navigator.standalone
-		) {
-			this.shown = false;
-		} else {
-			this.shown = true;
 		}
 	},
 
@@ -153,48 +123,11 @@ export default {
 				this.$request(onSuccess, this.$waiters.Auth.Login, onError);
 			});
 		},
-
-		installPWA() {
-			this.installEvent.prompt();
-			// then refresh the page
-			this.installEvent.userChoice.then((choiceResult) => {
-				if (choiceResult.outcome === "accepted") {
-					window.location.reload();
-				}
-			});
-		},
-
-		dismissPrompt() {
-			this.shown = false;
-		},
 	},
 };
 </script>
 
 <style lang="scss">
-.pwa {
-	margin: 0;
-	position: absolute;
-	top: 50%;
-	-ms-transform: translateY(-50%);
-	transform: translateY(-50%);
-}
-
-.pwa-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 24px;
-	height: 24px;
-	border-radius: 4px;
-	background-color: black;
-	color: $color-gray-300;
-}
-
-.pwa-btn:hover {
-	color: $color-secondary;
-}
-
 form {
 	display: inline-block;
 	margin-left: auto;

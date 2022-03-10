@@ -2,7 +2,7 @@
 	<div id="app">
 		<header class="app-header">
 			<button
-				v-tooltip="`Secman Desktop 🖥️`"
+				v-tooltip="`Secman UI 🗺️`"
 				class="trsn logo app-header-left-section"
 			>
 				<VIcon name="sm-logo" />

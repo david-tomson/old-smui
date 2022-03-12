@@ -22,14 +22,21 @@ jobs:
       uses: actions/setup-node@v2.5.0
       with:
         node-version: 16
+        
+    - name: Set up `Tag`
+      id: ghtag
+      run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
 
     - name: Instal deps
       run: yarn
 
     - name: Build `SMUI`
+      env:
+        TAG: ${{ steps.ghtag.outputs.tag }}
       run: |
         yarn build
         mv dist ui
+        echo $TAG >> ui/tag.txt
 
     - name: Zip it
       run: zip -9 -r smui.zip ui

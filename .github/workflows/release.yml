@@ -27,10 +27,12 @@ jobs:
       run: yarn
 
     - name: Build `SMUI`
-      run: yarn build
+      run: |
+        yarn build
+        mv dist ui
 
     - name: Zip it
-      run: zip -9 -r smui.zip dist
+      run: zip -9 -r smui.zip ui
 
     - name: Release
       uses: softprops/action-gh-release@v1
